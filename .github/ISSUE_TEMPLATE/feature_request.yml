@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest an improvement for LED MØNSTER
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: What would you like to do?
+      description: Describe the lighting, MIDI, or controller workflow you want.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Desired behaviour
+    validations:
+      required: true
+

@@ -1,0 +1,10 @@
+*.icns binary
+*.jpeg binary
+*.png binary
+*.dmg binary
+*.zip binary
+*.swift text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.sh text eol=lf
+

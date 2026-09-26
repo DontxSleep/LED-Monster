@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a reproducible LED MØNSTER problem
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve LED MØNSTER. Do not post Bluetooth reports before reviewing their device identifiers.
+  - type: input
+    id: version
+    attributes:
+      label: LED MØNSTER version
+      placeholder: 0.15.1 build 25
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and Mac model
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Explain what you did, what happened, and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: controller
+    attributes:
+      label: Controller details
+      description: Confirm whether the device advertises as BJ_LED_M. Remove identifiers before sharing reports.
+

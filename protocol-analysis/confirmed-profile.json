@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "protocolStatus": "unidentified",
+  "source": "User-uploaded iOS app-bundle files inspected 2026-09-17",
+  "appIdentity": {
+    "displayName": "MohuanLED",
+    "bundleIdentifier": "com.kimoji.flutter.bleled",
+    "version": "1.4.7",
+    "build": "961",
+    "nativeBleFramework": "reactive_ble_mobile"
+  },
+  "bleProtocol": {
+    "advertisedNamePatterns": null,
+    "serviceUUIDs": null,
+    "writeCharacteristicUUIDs": null,
+    "notifyCharacteristicUUIDs": null,
+    "writeMode": null,
+    "powerPackets": null,
+    "rgbPacketFormat": null,
+    "brightnessPacketFormat": null,
+    "effectPacketFormat": null,
+    "musicPacketFormat": null
+  }
+}

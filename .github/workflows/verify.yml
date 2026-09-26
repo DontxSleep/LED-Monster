@@ -1,0 +1,43 @@
+name: Verify macOS build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build LED MØNSTER
+        run: bash build.sh
+      - name: Run model tests
+        run: |
+          xcrun swiftc -swift-version 5 Sources/Models.swift Tests/ModelsTests.swift -o build/model-tests
+          build/model-tests
+      - name: Run protocol tests
+        run: |
+          xcrun swiftc -swift-version 5 Sources/Models.swift Sources/LEDProtocol.swift Tests/ProtocolTests.swift -o build/protocol-tests
+          build/protocol-tests
+      - name: Run live brightness tests
+        run: |
+          xcrun swiftc -swift-version 5 Sources/Models.swift Sources/LEDProtocol.swift Tests/LiveBrightnessTests.swift -o build/live-brightness-tests
+          build/live-brightness-tests
+      - name: Run VFX tests
+        run: |
+          xcrun swiftc -swift-version 5 Sources/VFXEngine.swift Tests/VFXEngineTests.swift -framework Combine -o build/vfx-tests
+          build/vfx-tests
+      - name: Run Mood tests
+        run: |
+          xcrun swiftc -swift-version 5 Sources/VFXEngine.swift Sources/MoodEngine.swift Tests/MoodEngineTests.swift -framework Combine -o build/mood-tests
+          build/mood-tests
+      - name: Run MIDI tests
+        run: |
+          xcrun swiftc -swift-version 5 Sources/Models.swift Sources/LEDProtocol.swift Sources/PadMapping.swift Sources/MIDIStore.swift Tests/MIDITests.swift -framework CoreMIDI -o build/midi-tests
+          build/midi-tests
+

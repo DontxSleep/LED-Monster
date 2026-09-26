@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleName</key><string>LED MØNSTER</string>
+<key>CFBundleDisplayName</key><string>LED MØNSTER</string>
+<key>CFBundleIdentifier</key><string>com.lumapanel.mac</string>
+<key>CFBundleExecutable</key><string>LEDMonster</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.15.1</string>
+<key>CFBundleVersion</key><string>25</string>
+<key>CFBundleIconFile</key><string>AppIcon</string>
+<key>LSMinimumSystemVersion</key><string>13.0</string>
+<key>NSHighResolutionCapable</key><true/>
+<key>NSBluetoothAlwaysUsageDescription</key><string>LED MØNSTER uses Bluetooth to find, inspect and control your LED strip controller when you choose Scan nearby.</string>
+<key>NSBluetoothPeripheralUsageDescription</key><string>LED MØNSTER uses Bluetooth to find, inspect and control your LED strip controller.</string>
+<key>NSPrincipalClass</key><string>NSApplication</string>
+</dict></plist>
