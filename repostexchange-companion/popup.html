@@ -10,11 +10,9 @@
   <body>
     <main class="app-shell">
       <header class="topbar">
-        <div class="brand-mark" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
         <div class="brand-copy">
-          <p class="eyebrow">YOUR CAMPAIGN DESK</p>
+          <p class="eyebrow">YOUR LOCAL CAMPAIGN DESK</p>
           <h1>Repost Companion</h1>
         </div>
         <span class="local-badge"><span class="local-dot"></span>LOCAL</span>
@@ -22,10 +20,7 @@
 
       <section class="progress-section" aria-label="Campaign progress">
         <div class="section-heading">
-          <div>
-            <p class="eyebrow">TODAY</p>
-            <h2>Your pace</h2>
-          </div>
+          <div><p class="eyebrow">TODAY</p><h2>Your pace</h2></div>
           <span id="today-label" class="date-label"></span>
         </div>
         <div class="progress-card">
@@ -33,9 +28,7 @@
             <div><strong id="daily-count">0</strong><span class="count-total"> / 20</span></div>
             <span id="daily-status" class="progress-caption">reposts logged</span>
           </div>
-          <div class="progress-track" role="progressbar" aria-label="Daily target progress" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
-            <span id="daily-fill"></span>
-          </div>
+          <div class="progress-track" role="progressbar" aria-label="Daily target progress" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><span id="daily-fill"></span></div>
           <div class="rolling-row">
             <span><span class="status-dot" id="rolling-dot"></span><span id="rolling-message">12-hour window clear</span></span>
             <strong id="rolling-count">0 / 10</strong>
@@ -47,56 +40,33 @@
 
       <section class="form-section" aria-labelledby="track-heading">
         <div class="section-heading form-heading">
-          <div>
-            <p class="eyebrow">ONE TRACK AT A TIME</p>
-            <h2 id="track-heading">Make it personal</h2>
-          </div>
+          <div><p class="eyebrow">BUILD YOUR QUEUE</p><h2 id="track-heading">Add a track</h2></div>
           <span class="step-mark">01 <i>/ 02</i></span>
         </div>
-
         <div class="field-grid">
-          <label class="field">
-            <span>Track title</span>
-            <input id="track-title" type="text" maxlength="160" autocomplete="off" placeholder="Name of the track">
-          </label>
-          <label class="field">
-            <span>Artist</span>
-            <input id="artist-name" type="text" maxlength="120" autocomplete="off" placeholder="Artist name">
-          </label>
+          <label class="field"><span>Track title</span><input id="track-title" type="text" maxlength="160" autocomplete="off" placeholder="Name of the track"></label>
+          <label class="field"><span>Artist</span><input id="artist-name" type="text" maxlength="120" autocomplete="off" placeholder="Artist name"></label>
         </div>
+        <button id="add-button" class="button button-primary" type="button" disabled><span>Add to queue</span><span aria-hidden="true">＋</span></button>
+        <p class="manual-note">You control the listening and reposting on RepostExchange. Mark each step here after you do it.</p>
+      </section>
 
-        <label class="field notes-field">
-          <span>Your listening note</span>
-          <textarea id="listening-note" rows="2" maxlength="240" placeholder="What did you honestly enjoy? e.g. the warm bass and loose groove"></textarea>
-          <span class="field-hint">Use a real detail from your listen. The draft will stick to your note.</span>
-        </label>
-
-        <button id="generate-button" class="button button-primary" type="button" disabled>
-          <span>Draft a comment</span><span aria-hidden="true">↗</span>
-        </button>
-
-        <div id="draft-panel" class="draft-panel" hidden>
-          <div class="draft-heading">
-            <div><p class="eyebrow">EDIT BEFORE YOU POST</p><h3>Your draft</h3></div>
-            <span id="draft-char-count" class="char-count">0 / 280</span>
-          </div>
-          <textarea id="comment-draft" rows="3" maxlength="280" aria-label="Editable comment draft"></textarea>
-          <div class="draft-actions">
-            <button id="copy-button" class="button button-secondary" type="button">Copy draft</button>
-            <button id="another-button" class="button button-text" type="button">Try another</button>
-          </div>
-          <p class="manual-reminder">Listen and submit on RepostExchange yourself. Log it here only after the repost is complete.</p>
-          <button id="log-button" class="button button-log" type="button" disabled>I've submitted this repost</button>
+      <section class="queue-section" aria-labelledby="queue-heading">
+        <div class="section-heading queue-heading">
+          <div><p class="eyebrow">YOUR MANUAL CHECKLIST</p><h2 id="queue-heading">Up next</h2></div>
+          <span id="queue-count" class="history-total">0 queued</span>
         </div>
+        <div id="queue-list" class="queue-list"></div>
+        <p id="empty-queue" class="empty-state">Add a track. You’ll play it and submit any repost yourself.</p>
       </section>
 
       <section class="history-section" aria-labelledby="history-heading">
         <div class="section-heading history-heading">
-          <div><p class="eyebrow">YOUR LOCAL LOG</p><h2 id="history-heading">Recent tracks</h2></div>
+          <div><p class="eyebrow">YOUR LOCAL LOG</p><h2 id="history-heading">Completed</h2></div>
           <span id="history-count" class="history-total">0 saved</span>
         </div>
         <div id="history-list" class="history-list"></div>
-        <p id="empty-history" class="empty-state">Your completed tracks will show up here.</p>
+        <p id="empty-history" class="empty-state">Manually completed reposts will appear here.</p>
       </section>
 
       <footer class="footer-note"><span class="lock-mark" aria-hidden="true">◈</span> Nothing leaves this browser.</footer>

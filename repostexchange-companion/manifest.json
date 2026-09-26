@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Repost Companion — Manual Tracker",
-  "version": "1.0.0",
-  "description": "Track a manual RepostExchange goal and draft comments from your own listening notes.",
-  "permissions": ["storage", "clipboardWrite"],
+  "name": "Repost Companion — Local Queue",
+  "version": "1.1.0",
+  "description": "Keep a local manual listening checklist and repost progress log.",
+  "permissions": ["storage"],
   "action": {
     "default_title": "Repost Companion",
     "default_popup": "popup.html",

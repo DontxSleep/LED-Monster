@@ -2,34 +2,33 @@
 
 ## Name
 
-Repost Companion — Manual Tracker
+Repost Companion — Local Queue
 
 ## Short description
 
-Track manual reposts and draft comments from your listening notes.
+Keep a private checklist of tracks listened to and reposts completed manually.
 
 ## Detailed description
 
-Repost Companion helps you keep a personal record of tracks you have listened to and reposted manually. Add the track and artist, write a short note about what you honestly enjoyed, and get an editable comment draft built from that note. After you submit the repost yourself, log it to see your local daily progress and rolling 12-hour count.
+Repost Companion is a small local checklist for a manual RepostExchange session. Add track titles and artists to a queue, mark tracks listened to, and log a repost only after you choose and submit it yourself. The popup shows your local daily progress and rolling 12-hour count.
 
-Your daily goal and rolling-window count stay on this device. Repost Companion does not access RepostExchange or SoundCloud pages, submit actions, play audio, or run in the background. It does not connect to an AI service or send your listening notes to a server.
+The extension stores its queue and completion timestamps in Chrome local storage on this device. It does not access RepostExchange or SoundCloud pages, control playback, click buttons, submit comments or reposts, or run in the background. It makes no network requests and has no account, analytics, advertising, or remote AI service.
 
 Repost Companion is an independent productivity tool and is not affiliated with or endorsed by RepostExchange or SoundCloud.
 
 ## Single purpose
 
-Help a user keep a private manual log of completed music reposts and draft comments from user-entered listening notes.
+Help users keep a local manual listening checklist and progress log for reposts they complete themselves.
 
-## Permission justifications
+## Permission justification
 
-- `storage`: save the user's track log, drafts, and timestamps locally in Chrome.
-- `clipboardWrite`: copy a draft so the user can paste it manually into a site.
+- `storage`: save the user's queue and completion timestamps locally in Chrome.
 
 The extension requests no host permissions and does not collect or transmit user data.
 
 ## Privacy disclosure
 
-Repost Companion stores track titles, artist names, user listening notes, comment drafts, and completion timestamps in Chrome local storage on this device. This information is used only to draft comments and calculate progress. It is not sent to the developer or any other server. The extension includes no analytics, advertising, account system, or remote code.
+Repost Companion stores track titles, artist names, queue status, and completion timestamps in Chrome local storage on this device. This data is used only to display the checklist and calculate progress. It is not sent to the developer or any other server. The extension includes no analytics, advertising, account system, or remote code.
 
 ## Store assets
 
@@ -38,4 +37,4 @@ Repost Companion stores track titles, artist names, user listening notes, commen
 
 ## Support and privacy policy
 
-Add a support contact and host `store-assets/privacy-policy.html` at a stable public URL before submitting the item. Add a genuine product screenshot. Do not claim Chrome Web Store approval until review is complete.
+Add a support contact and host `store-assets/privacy-policy.html` at a stable public URL before submitting. Add a genuine product screenshot. Do not claim Chrome Web Store approval until review is complete.

@@ -1,25 +1,27 @@
-# Repost Companion — Manual Tracker
+# Repost Companion — Local Queue
 
-A small Chrome Manifest V3 extension for keeping a local campaign log and drafting comments from your own listening notes.
+A small Chrome Manifest V3 extension for keeping a local listening checklist and a record of reposts you complete yourself.
 
 ## What it does
 
-- Tracks completed reposts by your local calendar day and in a rolling 12-hour window.
-- Helps you work toward a local target of 20 per day while warning at 10 completed reposts in the last 12 hours.
-- Builds varied, editable comment drafts from the listening notes you provide.
-- Stores tracks, notes, drafts, and completion times in `chrome.storage.local` on this device.
+- Keeps a queue of track titles and artist names on this device.
+- Lets you mark a track listened to, then log the repost after you manually submit it.
+- Shows progress toward a 20-repost local calendar-day target and the rolling 10-per-12-hour limit.
+- Stores the queue and completion times in `chrome.storage.local`.
 
-The extension does not access or modify RepostExchange or SoundCloud pages. It does not play tracks, submit comments, repost, schedule work, or run in the background. Add a track to the log only after you have completed the repost manually. The 10-per-12-hour warning reflects the current RepostExchange terms; check the terms for updates.
+Repost Companion never opens or reads RepostExchange or SoundCloud, controls playback, clicks repost buttons, writes comments, or runs in the background. Use it as a checklist beside the site; you make each platform decision and action yourself. The rolling limit reflects the [RepostExchange terms](https://repostexchange.com/terms-of-use); check the terms for updates.
 
 ## Install locally
 
 1. Open `chrome://extensions` in Chrome.
 2. Turn on **Developer mode**.
 3. Choose **Load unpacked** and select this `repostexchange-companion` folder.
-4. Pin **Repost Companion** to the toolbar for easy access.
+4. Pin **Repost Companion** to the toolbar.
 
-## Test and package
+## Use
 
-Run the local logic tests with `node --test tests/core.test.cjs`. Create the store upload ZIP with `./scripts/package.sh`.
+Add a track and artist to your queue. Listen on RepostExchange yourself, then mark it listened. If you choose to repost it, submit the repost on RepostExchange yourself and only then select **I reposted it** in the extension. The local queue and count will update.
+
+Run the logic tests with `node --test tests/core.test.cjs`. Build the Chrome Web Store ZIP with `./scripts/package.sh`.
 
 See `store-listing.md` for the proposed listing and privacy disclosures.

@@ -3,14 +3,7 @@
   const elements = {
     title: document.querySelector("#track-title"),
     artist: document.querySelector("#artist-name"),
-    note: document.querySelector("#listening-note"),
-    generate: document.querySelector("#generate-button"),
-    draftPanel: document.querySelector("#draft-panel"),
-    draft: document.querySelector("#comment-draft"),
-    draftCount: document.querySelector("#draft-char-count"),
-    copy: document.querySelector("#copy-button"),
-    another: document.querySelector("#another-button"),
-    log: document.querySelector("#log-button"),
+    add: document.querySelector("#add-button"),
     dailyCount: document.querySelector("#daily-count"),
     dailyStatus: document.querySelector("#daily-status"),
     dailyFill: document.querySelector("#daily-fill"),
@@ -20,6 +13,9 @@
     rollingMessage: document.querySelector("#rolling-message"),
     rollingDot: document.querySelector("#rolling-dot"),
     limitBanner: document.querySelector("#limit-banner"),
+    queueList: document.querySelector("#queue-list"),
+    queueCount: document.querySelector("#queue-count"),
+    emptyQueue: document.querySelector("#empty-queue"),
     historyList: document.querySelector("#history-list"),
     historyCount: document.querySelector("#history-count"),
     emptyHistory: document.querySelector("#empty-history"),
@@ -27,7 +23,7 @@
   };
 
   const STORE_KEY = "repostCompanionData";
-  let data = { entries: [], drafts: [] };
+  let data = { entries: [], queue: [] };
   let toastTimer;
 
   function todayLabel(date = new Date()) {
@@ -36,6 +32,11 @@
 
   function formatTime(timestamp) {
     return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(new Date(timestamp));
+  }
+
+  function toTimestamp(value) {
+    const timestamp = typeof value === "number" ? value : Date.parse(value);
+    return Number.isFinite(timestamp) ? timestamp : null;
   }
 
   function countdown(target, now = Date.now()) {
@@ -81,8 +82,62 @@
       elements.limitBanner.textContent = "";
     }
 
-    elements.generate.disabled = !elements.title.value.trim() || !elements.artist.value.trim() || !elements.note.value.trim();
-    elements.log.disabled = !progress.canLog || !elements.draft.value.trim();
+    elements.add.disabled = !elements.title.value.trim() || !elements.artist.value.trim();
+  }
+
+  function makeTrackCopy(entry) {
+    const copy = document.createElement("div");
+    copy.className = "queue-copy";
+    const title = document.createElement("strong");
+    title.textContent = entry.title;
+    const detail = document.createElement("span");
+    detail.textContent = entry.status === "listened" ? `${entry.artist} · listened` : `${entry.artist} · ready to listen`;
+    copy.append(title, detail);
+    return copy;
+  }
+
+  function makeButton(label, className, onClick, options = {}) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.textContent = label;
+    button.disabled = Boolean(options.disabled);
+    button.setAttribute("aria-label", options.ariaLabel || label);
+    button.addEventListener("click", onClick);
+    return button;
+  }
+
+  function renderQueue() {
+    const sorted = [...data.queue].sort((a, b) => a.addedAt - b.addedAt);
+    const progress = core.getProgress(data.entries);
+    elements.queueList.replaceChildren();
+    elements.queueCount.textContent = `${sorted.length} queued`;
+    elements.emptyQueue.hidden = sorted.length > 0;
+
+    for (const entry of sorted) {
+      const row = document.createElement("article");
+      row.className = "queue-item";
+      row.append(makeTrackCopy(entry));
+      const actions = document.createElement("div");
+      actions.className = "queue-actions";
+
+      if (entry.status === "listened") {
+        const canLog = progress.canLog;
+        const disabledLabel = progress.todayCount >= progress.dailyTarget ? "Daily goal reached" : "Wait for slot";
+        actions.append(makeButton(
+          canLog ? "I reposted it" : disabledLabel,
+          "button button-log",
+          () => completeRepost(entry.id),
+          { disabled: !canLog, ariaLabel: canLog ? `Log ${entry.title} after manually reposting it` : disabledLabel }
+        ));
+      } else {
+        actions.append(makeButton("I listened", "button button-step", () => markListened(entry.id)));
+      }
+
+      actions.append(makeButton("Remove", "button-remove", () => removeQueuedTrack(entry.id), { ariaLabel: `Remove ${entry.title} from your queue` }));
+      row.append(actions);
+      elements.queueList.append(row);
+    }
   }
 
   function renderHistory() {
@@ -101,17 +156,12 @@
       const detail = document.createElement("span");
       detail.textContent = `${entry.artist} · ${formatTime(entry.completedAt)}`;
       copy.append(title, detail);
-      const remove = document.createElement("button");
-      remove.className = "remove-entry";
-      remove.type = "button";
-      remove.textContent = "Remove";
-      remove.setAttribute("aria-label", `Remove ${entry.title} from your local log`);
-      remove.addEventListener("click", async () => {
+      const remove = makeButton("Remove", "remove-entry", async () => {
         data.entries = data.entries.filter((item) => item.id !== entry.id);
         await save();
         render();
         toast("Removed from your local log");
-      });
+      }, { ariaLabel: `Remove ${entry.title} from your local log` });
       row.append(copy, remove);
       elements.historyList.append(row);
     }
@@ -119,83 +169,79 @@
 
   function render() {
     updateProgress();
+    renderQueue();
     renderHistory();
-    elements.draftCount.textContent = `${elements.draft.value.length} / 280`;
   }
 
-  async function makeDraft() {
-    const note = elements.note.value.trim();
-    if (!note) return;
-    const draft = core.generateDraft(note, data.drafts, `${Date.now()}|${elements.title.value}|${elements.artist.value}`);
-    elements.draft.value = draft;
-    elements.draftPanel.hidden = false;
-    data.drafts = [...data.drafts, draft].slice(-240);
-    await save();
-    render();
-    elements.draft.focus();
-    elements.draft.setSelectionRange(draft.length, draft.length);
-  }
-
-  elements.generate.addEventListener("click", makeDraft);
-  elements.another.addEventListener("click", makeDraft);
-  function invalidateDraft() {
-    elements.draft.value = "";
-    elements.draftPanel.hidden = true;
-    render();
-  }
-
-  elements.title.addEventListener("input", invalidateDraft);
-  elements.artist.addEventListener("input", invalidateDraft);
-  elements.note.addEventListener("input", invalidateDraft);
-  elements.draft.addEventListener("input", render);
-
-  elements.copy.addEventListener("click", async () => {
-    const value = elements.draft.value.trim();
-    if (!value) return;
-    try {
-      await navigator.clipboard.writeText(value);
-      toast("Draft copied");
-    } catch {
-      toast("Copy unavailable — select the draft and copy it manually");
-    }
-  });
-
-  elements.log.addEventListener("click", async () => {
-    elements.log.disabled = true;
-    const progress = core.getProgress(data.entries);
+  async function addTrack() {
     const title = elements.title.value.trim();
     const artist = elements.artist.value.trim();
-    const comment = elements.draft.value.trim();
-    if (!progress.canLog || !title || !artist || !comment) {
-      render();
-      return;
-    }
-
-    data.entries.push({
-      id: crypto.randomUUID(),
-      title,
-      artist,
-      note: elements.note.value.trim(),
-      comment,
-      completedAt: Date.now()
-    });
+    if (!title || !artist) return;
+    data.queue.push({ id: crypto.randomUUID(), title, artist, status: "queued", addedAt: Date.now() });
     await save();
     elements.title.value = "";
     elements.artist.value = "";
-    elements.note.value = "";
-    elements.draft.value = "";
-    elements.draftPanel.hidden = true;
     render();
-    toast("Added to your local log");
+    elements.title.focus();
+    toast("Added to your local queue");
+  }
+
+  async function markListened(id) {
+    const entry = data.queue.find((item) => item.id === id);
+    if (!entry) return;
+    entry.status = "listened";
+    entry.listenedAt = Date.now();
+    await save();
+    render();
+    toast("Marked listened — repost it yourself if you choose");
+  }
+
+  async function completeRepost(id) {
+    const progress = core.getProgress(data.entries);
+    const entry = data.queue.find((item) => item.id === id);
+    if (!entry || entry.status !== "listened" || !progress.canLog) return;
+    const completedAt = Date.now();
+    data.entries.push({ id: crypto.randomUUID(), title: entry.title, artist: entry.artist, completedAt });
+    data.queue = data.queue.filter((item) => item.id !== id);
+    await save();
+    render();
+    toast("Manual repost added to your local log");
+  }
+
+  async function removeQueuedTrack(id) {
+    data.queue = data.queue.filter((item) => item.id !== id);
+    await save();
+    render();
+    toast("Removed from your queue");
+  }
+
+  elements.title.addEventListener("input", updateProgress);
+  elements.artist.addEventListener("input", updateProgress);
+  elements.add.addEventListener("click", addTrack);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && (event.target === elements.title || event.target === elements.artist) && !elements.add.disabled) addTrack();
   });
 
-  chrome.storage.local.get(STORE_KEY).then((stored) => {
+  chrome.storage.local.get(STORE_KEY).then(async (stored) => {
     const saved = stored[STORE_KEY];
     if (saved && typeof saved === "object") {
       data = {
-        entries: Array.isArray(saved.entries) ? saved.entries : [],
-        drafts: Array.isArray(saved.drafts) ? saved.drafts : []
+        entries: Array.isArray(saved.entries) ? saved.entries.filter((entry) => entry && toTimestamp(entry.completedAt) !== null).map((entry, index) => ({
+          id: typeof entry.id === "string" ? entry.id : `legacy-${index}-${entry.completedAt}`,
+          title: String(entry.title || "Untitled track"),
+          artist: String(entry.artist || "Unknown artist"),
+          completedAt: toTimestamp(entry.completedAt)
+        })) : [],
+        queue: Array.isArray(saved.queue) ? saved.queue.filter((entry) => entry && typeof entry.title === "string" && typeof entry.artist === "string").map((entry, index) => ({
+          id: typeof entry.id === "string" ? entry.id : `queue-${index}-${entry.addedAt || Date.now()}`,
+          title: entry.title,
+          artist: entry.artist,
+          status: entry.status === "listened" ? "listened" : "queued",
+          addedAt: Number.isFinite(entry.addedAt) ? entry.addedAt : Date.now(),
+          ...(Number.isFinite(entry.listenedAt) ? { listenedAt: entry.listenedAt } : {})
+        })) : []
       };
+      await save();
     }
     render();
   }).catch(() => {
@@ -203,5 +249,5 @@
     toast("Couldn’t load local history");
   });
 
-  setInterval(updateProgress, 30000);
+  setInterval(render, 30000);
 })();
